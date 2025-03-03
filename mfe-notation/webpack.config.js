@@ -11,7 +11,7 @@ module.exports = {
     publicPath: 'http://localhost:3032/', // Different port from header MFE
   },
   devServer: {
-    port: 3002, // Different port from header MFE
+    port: 3032, // Different port from header MFE
     static: {
       directory: path.join(__dirname, 'public'),
     },
@@ -42,7 +42,7 @@ module.exports = {
   plugins: [
     new ModuleFederationPlugin({
       name: 'notation',
-      filename: 'notation.js',
+      filename: 'Notation.js',
       exposes: {
         './Notation': './src/Notation',
       },

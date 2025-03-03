@@ -4,7 +4,7 @@ import Notation from './Notation';
 
 const mount = (el) => {
   const root = createRoot(el);
-  root.render(<Notation />);
+  root.render(<Notation movieId={1}/>);
   return root;
 };
 
