@@ -14,17 +14,33 @@ const Recommendations = ({ movieId, movies, recommendations }) => {
   const movie = movies.find((m) => m.id === movieId);
 
   return (
-    <div className="recommendations">
-      <h2>Recommandations pour {movie?.title}</h2>
-      <div className="movie-list">
+    <div className="bg-gradient-to-b from-gray-900 to-black text-white p-8 rounded-lg shadow-xl">
+      <h2 className="text-3xl font-bold mb-6 border-l-4 border-red-600 pl-4">
+        Recommandations pour {movie?.title}
+      </h2>
+      <div className="flex overflow-x-scroll space-x-6 scrollbar-hide py-4">
         {recommendedMovies.map((movie) => (
-          <div key={movie.id} className="movie-item">
-            <img src={movie.posterUrl} alt={movie.title} />
-            <h3>{movie.title}</h3>
-            <p>{movie.year}</p>
-            <a href={movie.trailerUrl} target="_blank" rel="noopener noreferrer">
-              Voir la bande-annonce
-            </a>
+          <div 
+            key={movie.id} 
+            className="relative min-w-[200px] max-w-[200px] cursor-pointer transform transition-all duration-300 hover:scale-110 hover:shadow-xl"
+          >
+            <img 
+              src={movie.posterUrl} 
+              alt={movie.title} 
+              className="rounded-lg shadow-md transition-opacity duration-500 hover:opacity-80"
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 flex flex-col justify-end p-4 transition-opacity duration-300">
+              <h3 className="text-lg font-semibold">{movie.title}</h3>
+              <p className="text-sm text-gray-400">{movie.year}</p>
+              <a 
+                href={movie.trailerUrl} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="mt-2 inline-block text-sm bg-red-600 hover:bg-red-700 px-3 py-1 rounded-md transition-all"
+              >
+                🎬 Voir la bande-annonce
+              </a>
+            </div>
           </div>
         ))}
       </div>
