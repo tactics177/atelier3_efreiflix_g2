@@ -1,32 +1,35 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import Recommendations from './recommendations';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import Recommendations from "./recommendations";
 import data from "../../db/efreiflix-db.json";
 
 const mount = (el) => {
   const root = createRoot(el);
+
   root.render(
-    <div>
+    <div className="bg-gradient-to-b from-gray-900 to-black text-white min-h-screen p-8">
       {data.recommendations.map((rec) => (
-        <Recommendations
-          movieId={rec.movieId}
-          movies={data.movies}
-          recommendations={data.recommendations}
-        />
+        <div key={rec.movieId} className="mb-12">
+          <Recommendations
+            movieId={rec.movieId}
+            movies={data.movies}
+            recommendations={data.recommendations}
+          />
+        </div>
       ))}
     </div>
   );
+
   return root;
 };
 
-// If we are in development and running in isolation,
-// mount immediately
-if (process.env.NODE_ENV === 'development') {
-  const devRoot = document.querySelector('#root');
+// Si on est en développement et en mode isolation, on monte immédiatement
+if (process.env.NODE_ENV === "development") {
+  const devRoot = document.querySelector("#root");
   if (devRoot) {
     mount(devRoot);
   }
 }
 
-// We are running through the shell
-export { mount }; 
+// Exportation pour le shell
+export { mount };
