@@ -1,8 +1,9 @@
 import React, {useEffect} from 'react';
+import ReactStars from 'react-rating-stars-component';
 import './styles.css';
 
 const Notation = ({ movieId }) => {
-    const [rating, setRating] = React.useState(null);
+    let [rating, setRating] = React.useState(null);
 
     useEffect(() => {
         fetch(`http://localhost:3001/movies/${movieId}`)
@@ -12,16 +13,22 @@ const Notation = ({ movieId }) => {
             });
     }, [movieId]);
 
-  return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Notation MFE</h1>
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <p className="text-gray-700">
-            {rating && <span>Rating: {rating}</span>}
-        </p>
-      </div>
-    </div>
-  );
+    return (
+        <div className="notation">
+            {rating !== null ? (
+                <ReactStars
+                    count={5}
+                    value={rating}
+                    size={30}
+                    edit={false}
+                    activeColor="#ffd700"
+                    isHalf={true}
+                />
+            ) : (
+                <p>Chargement...</p>
+            )}
+        </div>
+    );
 };
 
 export default Notation;
