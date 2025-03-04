@@ -57,6 +57,16 @@ module.exports = {
           requiredVersion: dependencies['react-dom'],
           eager: true
         },
+        'axios': {
+          singleton: true,
+          requiredVersion: dependencies.axios,
+          eager: true
+        },
+        'react-icons': {
+          singleton: true,
+          requiredVersion: dependencies['react-icons'],
+          eager: true
+        }
       },
     }),
     new HtmlWebpackPlugin({

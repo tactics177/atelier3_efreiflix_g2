@@ -179,7 +179,22 @@ const App = () => {
             <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>Recommandations</h2>
             <ErrorBoundary fallback="Erreur lors du chargement des recommandations.">
               <Suspense fallback={<LoadingPlaceholder text="Chargement des recommandations..." />}>
-                <Recommendations />
+                <Recommendations 
+                  movieId={1}
+                  movies={[
+                    { id: 1, title: "Inception" },
+                    { id: 2, title: "The Dark Knight" },
+                    { id: 3, title: "Interstellar" },
+                    { id: 4, title: "The Matrix" },
+                    { id: 5, title: "Pulp Fiction" }
+                  ]}
+                  recommendations={[
+                    { 
+                      movieId: 1, 
+                      recommendedMovieIds: [2, 3, 4, 5] 
+                    }
+                  ]}
+                />
               </Suspense>
             </ErrorBoundary>
           </section>
