@@ -7,6 +7,7 @@ import React, { Suspense } from 'react';
 const Catalogue = React.lazy(() => import('catalogue_G1/Catalogue'));
 const Watchlist = React.lazy(() => import('watchlist/Watchlist'));
 const Notation = React.lazy(() => import('notation/Notation'));
+const Preview = React.lazy(() => import('preview/productPreview'));
 
 // Error boundary component for handling loading errors
 class ErrorBoundary extends React.Component {
