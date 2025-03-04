@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 
 // Remove header import
 // const Header = React.lazy(() => import('header/Header'));
@@ -50,6 +50,10 @@ const LoadingPlaceholder = ({ text }) => (
 
 const App = () => {
   const [activeSection, setActiveSection] = React.useState('home');
+
+  useEffect(() => {
+    localStorage.setItem('user', JSON.stringify({ id: 1, profileId: 1 }));
+  }, []);
 
   return (
     <div style={{ 
