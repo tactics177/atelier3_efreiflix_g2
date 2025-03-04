@@ -50,7 +50,7 @@ export const ProductsList = ({ products }) => {
 
       {isModalOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+          className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50"
           onClick={closeModal}
         >
           <div className="relative w-full max-w-2xl mx-auto" onClick={(e) => e.stopPropagation()}>
