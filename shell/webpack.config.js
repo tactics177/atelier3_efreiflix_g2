@@ -51,7 +51,8 @@ module.exports = {
         recommendations: 'recommendations@http://localhost:3055/remoteEntry.js',
         watchlist: 'watchlist@http://localhost:3031/watchlist_chunk.js',
         notation: 'notation@http://localhost:3032/Notation.js',
-        preview: 'preview@http://localhost:3033/productPreview.js',
+        preview: 'preview@http://localhost:3033/productPreview.js', 
+        //watchlist: 'watchlist@http://localhost:3010/remoteEntry.js'
       },
 
       shared: {
