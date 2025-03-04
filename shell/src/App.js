@@ -1,26 +1,45 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 
 // Remove header import
 // const Header = React.lazy(() => import('header/Header'));
 // We'll use the real MFEs instead of the skeleton
 // const Skeleton = React.lazy(() => import('skeleton/Skeleton'));
-const Catalogue = React.lazy(() => import('catalogue_G1/Catalogue'));
-const Recommendations = React.lazy(() => import('recommendations/recommendations'));
-const Watchlist = React.lazy(() => import('watchlist/Watchlist'));
-const Notation = React.lazy(() => import('notation/Notation'));
-const Preview = React.lazy(() => import('preview/productPreview'));
-const UserProfile = React.lazy(() => import('userprofile/userProfile')); 
-const Favoris = React.lazy(() => import('favoris/Watchlist'));
+
+// Wrap imports in try-catch to handle potential loading errors
+const lazyLoad = (importFn, fallback) => {
+  try {
+    return React.lazy(importFn);
+  } catch (error) {
+    console.error("Failed to load module:", error);
+    return () => fallback;
+  }
+};
+
+// Use the lazyLoad function for all MFE imports
+const Catalogue = lazyLoad(() => import('catalogue_G1/Catalogue'), 
+  <div className="p-4 bg-red-900 rounded">Le catalogue n'a pas pu être chargé.</div>);
+const Recommendations = lazyLoad(() => import('recommendations/recommendations'),
+  <div className="p-4 bg-red-900 rounded">Les recommandations n'ont pas pu être chargées.</div>);
+const Watchlist = lazyLoad(() => import('watchlist/Watchlist'),
+  <div className="p-4 bg-red-900 rounded">La liste de visionnage n'a pas pu être chargée.</div>);
+const Notation = lazyLoad(() => import('notation/Notation'),
+  <div className="p-4 bg-red-900 rounded">Le système de notation n'a pas pu être chargé.</div>);
+const Preview = lazyLoad(() => import('preview/productPreview'),
+  <div className="p-4 bg-red-900 rounded">L'aperçu du produit n'a pas pu être chargé.</div>);
+const UserProfile = lazyLoad(() => import('userprofile/userProfile'),
+  <div className="p-4 bg-red-900 rounded">Le profil utilisateur n'a pas pu être chargé.</div>);
+const Favoris = lazyLoad(() => import('favoris/Watchlist'),
+  <div className="p-4 bg-red-900 rounded">Les favoris n'ont pas pu être chargés.</div>);
 
 // Error boundary component for handling loading errors
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, error: null };
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true };
+    return { hasError: true, error };
   }
 
   componentDidCatch(error, errorInfo) {
@@ -29,9 +48,26 @@ class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      return <div className="p-4 bg-red-900 rounded">
-        {this.props.fallback || "Une erreur est survenue lors du chargement du composant."}
-      </div>;
+      return (
+        <div className="p-4 bg-red-900 rounded">
+          <h3 className="text-xl font-bold mb-2">Erreur de chargement</h3>
+          <p>{this.props.fallback || "Une erreur est survenue lors du chargement du composant."}</p>
+          {this.state.error && (
+            <details className="mt-2">
+              <summary className="cursor-pointer">Détails techniques</summary>
+              <pre className="mt-2 p-2 bg-black/50 rounded text-xs overflow-auto">
+                {this.state.error.toString()}
+              </pre>
+            </details>
+          )}
+          <button 
+            className="mt-4 px-4 py-2 bg-white text-red-900 rounded font-bold"
+            onClick={() => this.setState({ hasError: false, error: null })}
+          >
+            Réessayer
+          </button>
+        </div>
+      );
     }
 
     return this.props.children;
@@ -43,7 +79,7 @@ const LoadingPlaceholder = ({ text }) => (
   <div>
     <div className="flex gap-4 overflow-x-auto py-5">
       {[...Array(5)].map((_, i) => (
-        <div key={i} className="min-w-[200px] h-[300px] bg-gray-800 rounded"></div>
+        <div key={i} className="min-w-[200px] h-[300px] bg-gray-800 rounded animate-pulse"></div>
       ))}
     </div>
     <div className="text-center mt-4">{text || 'Chargement...'}</div>
