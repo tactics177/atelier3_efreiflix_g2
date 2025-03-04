@@ -5,7 +5,7 @@ module.exports = {
   entry: "./src/index.js",
   mode: "development",
   devServer: {
-    port: 3000, 
+    port: 3000,
     hot: true,
   },
   module: {
@@ -24,17 +24,24 @@ module.exports = {
     new ModuleFederationPlugin({
       name: "shell",
       remotes: {
-        header: 'header@http://localhost:3001/remoteEntry.js', 
-        skeleton: 'skeleton@http://localhost:3025/remoteEntry.js'
+        // We're removing the example MFEs (header and skeleton)
+        // header: 'header@http://localhost:3001/remoteEntry.js',
+        // skeleton: 'skeleton@http://localhost:3002/remoteEntry.js',
+        catalogue_G1: 'catalogue_G1@http://localhost:3003/remoteEntry.js',
+        recommendations: 'recommendations@http://localhost:3055/remoteEntry.js',
+        watchlist: 'watchlist@http://localhost:3031/watchlist_chunk.js',
+        notation: 'notation@http://localhost:3032/Notation.js',
+        preview: 'preview@http://localhost:3033/productPreview.js',
+        comments: 'comments@http://localhost:3025/Comments.js'
       },
 
       shared: {
-        react: { 
+        react: {
           singleton: true,
           requiredVersion: false,
           eager: true
         },
-        "react-dom": { 
+        "react-dom": {
           singleton: true,
           requiredVersion: false,
           eager: true
