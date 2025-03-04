@@ -38,6 +38,13 @@ const Recommendations = ({ movieId, movies, recommendations }) => {
             <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 flex flex-col justify-end p-4 transition-opacity duration-300">
               <h3 className="text-lg font-semibold">{movie.title}</h3>
               <p className="text-sm text-gray-400">{movie.year}</p>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {movie.genres.map((genre, index) => (
+                  <span key={index} className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded-full">
+                    {genre}
+                  </span>
+                ))}
+              </div>
               <p className="text-yellow-400 text-sm font-bold">
                 {renderStars(movie.rating)} ({movie.rating})
               </p>
