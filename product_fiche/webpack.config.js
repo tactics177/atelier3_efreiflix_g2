@@ -41,7 +41,7 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: 'productPreview',
+      name: 'preview',
       filename: 'productPreview.js',
       exposes: {
         './productPreview': './src/productPreview',
