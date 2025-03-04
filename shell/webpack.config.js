@@ -53,7 +53,7 @@ module.exports = {
         notation: 'notation@http://localhost:3032/Notation.js',
         preview: 'preview@http://localhost:3033/productPreview.js',
         userprofile: 'userProfile@http://localhost:3034/userProfile.js',
-        // watchlist: 'watchlist@http://localhost:3010/remoteEntry.js'
+        favoris: 'favoris@http://localhost:3010/remoteEntry.js'
       },
 
       shared: {

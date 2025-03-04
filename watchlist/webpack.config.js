@@ -54,7 +54,7 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: 'watchlist', // Nom UNIQUE du Micro Frontend (utilisé par le Shell pour l'importer)
+      name: 'favoris', // Nom UNIQUE du Micro Frontend (utilisé par le Shell pour l'importer)
       filename: 'remoteEntry.js', // Nom du fichier d'entrée exposé (conventionnel)
       exposes: {
         './Watchlist': './src/Watchlist', // Expose le composant Header (chemin relatif)
