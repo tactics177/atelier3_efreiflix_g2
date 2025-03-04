@@ -8,10 +8,10 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: 'http://localhost:3033/', // Different port from header MFE
+    publicPath: 'http://localhost:3003/', // Different port from header MFE
   },
   devServer: {
-    port: 3033, // Different port from header MFE
+    port: 3003, // Different port from header MFE
     static: {
       directory: path.join(__dirname, 'public'),
     },
@@ -41,10 +41,10 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: 'preview',
-      filename: 'productPreview.js',
+      name: 'recommendations',
+      filename: 'remoteEntry.js',
       exposes: {
-        './productPreview': './src/productPreview',
+        './recommendations': './src/recommendations',
       },
       shared: {
         react: {
