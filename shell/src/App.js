@@ -135,7 +135,7 @@ const App = () => {
           <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>Notations</h2>
           <ErrorBoundary fallback="Erreur lors du chargement des notations.">
             <Suspense fallback={<LoadingPlaceholder text="Chargement des notations..." />}>
-              <Notation />
+              <Notation movieId={1} />
             </Suspense>
           </ErrorBoundary>
         </section>
