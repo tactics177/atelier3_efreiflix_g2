@@ -1,59 +1,108 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const Recommendations = ({ movieId, movies, recommendations }) => {
-  // Trouver les recommandations du film
-  const recommendedMovieIds = recommendations.find(
-    (rec) => rec.movieId === movieId
-  )?.recommendedMovieIds;
+  const recommendedMovieIds =
+    recommendations.find((rec) => rec.movieId === movieId)?.recommendedMovieIds || [];
+  const recommendedMovies = movies.filter((movie) => recommendedMovieIds.includes(movie.id));
+  const apiKey = "15d2ea6d0dc1d476efbca3eba2b9bbfb";
 
-  // Récupérer les films recommandés
-  const recommendedMovies = movies.filter((movie) =>
-    recommendedMovieIds?.includes(movie.id)
-  );
+  const MovieList = ({ movies }) => {
+    const [posterUrls, setPosterUrls] = useState({});
+    const containerRef = useRef(null);
 
-  const renderStars = (rating) => {
-    const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 !== 0 ? "⭐️" : "";
-    return "⭐️".repeat(fullStars) + halfStar;
+    useEffect(() => {
+      const fetchPosters = async () => {
+        const moviePromises = movies.map(async (movie) => {
+          try {
+            const response = await axios.get(
+              `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(movie.title)}`
+            );
+            const posterPath = response.data.results[0]?.poster_path;
+            return { id: movie.id, posterUrl: posterPath ? `http://image.tmdb.org/t/p/w500/${posterPath}` : null };
+          } catch (error) {
+            console.error(`Erreur lors de la récupération de l'affiche pour ${movie.title}:`, error);
+            return { id: movie.id, posterUrl: null };
+          }
+        });
+
+        const resolvedPosters = await Promise.all(moviePromises);
+        setPosterUrls(
+          resolvedPosters.reduce((acc, movie) => {
+            acc[movie.id] = movie.posterUrl;
+            return acc;
+          }, {})
+        );
+      };
+
+      fetchPosters();
+    }, [movies]);
+
+    const scrollLeft = () => {
+      if (containerRef.current) {
+        containerRef.current.scrollBy({ left: -300, behavior: "smooth" });
+      }
+    };
+
+    const scrollRight = () => {
+      if (containerRef.current) {
+        containerRef.current.scrollBy({ left: 300, behavior: "smooth" });
+      }
+    };
+
+    return (
+      <div className="relative bg-gradient-to-b from-gray-900 to-black text-white p-8 rounded-lg shadow-xl">
+        <h2 className="text-3xl font-bold mb-6 border-l-4 border-red-600 pl-4">
+          Recommandations pour {movies.find((m) => m.id === movieId)?.title}
+        </h2>
+
+        {/* Flèche gauche */}
+        {movies.length > 2 && (
+          <button
+            onClick={scrollLeft}
+            className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700"
+          >
+            <FaChevronLeft size={24} />
+          </button>
+        )}
+
+        {/* Liste des films */}
+        <div ref={containerRef} className="flex space-x-6 overflow-hidden py-4">
+          {movies.map((movie) => (
+            <div
+              key={movie.id}
+              className="relative min-w-[200px] max-w-[200px] cursor-pointer transform transition-all duration-300 hover:scale-110 hover:shadow-xl"
+            >
+              {posterUrls[movie.id] ? (
+                <img
+                  src={posterUrls[movie.id]}
+                  alt={movie.title}
+                  className="rounded-lg shadow-md transition-opacity duration-500 hover:opacity-80"
+                />
+              ) : (
+                <div className="w-[200px] h-[300px] bg-gray-800 flex items-center justify-center text-gray-500">
+                  Image non disponible
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Flèche droite */}
+        {movies.length > 2 && (
+          <button
+            onClick={scrollRight}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700"
+          >
+            <FaChevronRight size={24} />
+          </button>
+        )}
+      </div>
+    );
   };
 
-  const movie = movies.find((m) => m.id === movieId);
-
-  return (
-    <div className="bg-gradient-to-b from-gray-900 to-black text-white p-8 rounded-lg shadow-xl">
-      <h2 className="text-3xl font-bold mb-6 border-l-4 border-red-600 pl-4">
-        Recommandations pour {movie?.title}
-      </h2>
-      <div className="flex overflow-x-scroll space-x-6 scrollbar-hide py-4">
-        {recommendedMovies.map((movie) => (
-          <div 
-            key={movie.id} 
-            className="relative min-w-[200px] max-w-[200px] cursor-pointer transform transition-all duration-300 hover:scale-110 hover:shadow-xl"
-          >
-            <img 
-              src={movie.posterUrl} 
-              alt={movie.title} 
-              className="rounded-lg shadow-md transition-opacity duration-500 hover:opacity-80"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 flex flex-col justify-end p-4 transition-opacity duration-300">
-              <h3 className="text-lg font-semibold">{movie.title}</h3>
-              <p className="text-sm text-gray-400">{movie.year}</p>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {movie.genres.map((genre, index) => (
-                  <span key={index} className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded-full">
-                    {genre}
-                  </span>
-                ))}
-              </div>
-              <p className="text-yellow-400 text-sm font-bold">
-                {renderStars(movie.rating)} ({movie.rating})
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  return <MovieList movies={recommendedMovies} />;
 };
 
 export default Recommendations;
