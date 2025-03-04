@@ -11,6 +11,7 @@ const Notation = React.lazy(() => import('notation/Notation'));
 const Preview = React.lazy(() => import('preview/productPreview'));
 const UserProfile = React.lazy(() => import('userprofile/userProfile')); 
 const Favoris = React.lazy(() => import('favoris/Watchlist'));
+const MovieCarousel = React.lazy(() => import('carousel/MovieCarousel'));
 
 // Error boundary component for handling loading errors
 class ErrorBoundary extends React.Component {
@@ -114,6 +115,15 @@ const App = () => {
           </ul>
         </nav>
       </header>
+
+      <section className="mb-12">
+        <h2 className="text-2xl mb-6">Top Picks</h2>
+        <ErrorBoundary fallback="Erreur lors du chargement du carrousel.">
+          <Suspense fallback={<LoadingPlaceholder text="Chargement du carrousel..." />}>
+            <MovieCarousel />
+          </Suspense>
+        </ErrorBoundary>
+      </section>
 
       <main className="p-8">
         {/* Hero banner section - only show on home */}

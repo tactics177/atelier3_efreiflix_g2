@@ -39,7 +39,8 @@ module.exports = {
         preview: 'preview@http://localhost:3033/productPreview.js',
         comments: 'comments@http://localhost:3025/Comments.js',
         userprofile: 'userProfile@http://localhost:3034/userProfile.js',
-        favoris: 'favoris@http://localhost:3010/remoteEntry.js'
+        favoris: 'favoris@http://localhost:3010/remoteEntry.js',
+        carousel:'carousel@http://localhost:3036/remoteEntry.js',
       },
 
       shared: {
