@@ -8,11 +8,12 @@ const UserProfile = () => {
 
   // Fonction pour récupérer un utilisateur et ses profils en fonction de l'ID de l'utilisateur
   const fetchUserById = (userId) => {
-    return fetch(`http://localhost:3001/users/${userId}`)
+    const response = fetch(`http://localhost:3001/users/?id=${userId}`)
       .then((response) => response.json())
       .catch((err) => {
         throw new Error("Erreur lors de la récupération de l'utilisateur");
       });
+    return response;
   };
 
   useEffect(() => {
@@ -21,7 +22,9 @@ const UserProfile = () => {
 
     fetchUserById(userId)
       .then((userData) => {
-        setUser(userData); // On met à jour l'état avec l'utilisateur récupéré
+        const data = userData[0];
+        console.log(data);
+        setUser(data); // On met à jour l'état avec l'utilisateur récupéré
         setLoading(false);
       })
       .catch((err) => {
