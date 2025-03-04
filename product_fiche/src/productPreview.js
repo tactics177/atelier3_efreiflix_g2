@@ -9,9 +9,10 @@ const MovieCard = ({ id = 1 }) => {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/movies/${id}`);
+        const response = await axios.get(`http://localhost:3001/movies/?id=${id}`);
+debugger;
         const apiKey = '15d2ea6d0dc1d476efbca3eba2b9bbfb';
-        const movieData = response.data;
+        const movieData = response.data[0];
 
         const posterResponse = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${movieData.title}`);
         const posterPath = posterResponse.data.results[0]?.poster_path;
