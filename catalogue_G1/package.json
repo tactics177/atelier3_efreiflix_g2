@@ -1,5 +1,5 @@
 {
-  "name": "efreiflix-mfe-catalogue-g2",
+  "name": "mfe-catalogue-g2",
   "version": "1.0.0",
   "scripts": {
     "start": "webpack serve --mode development",
