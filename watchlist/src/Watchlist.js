@@ -7,8 +7,8 @@ const Watchlist = () => {
 
   const [myfavorites, setMyFavorites] = useState([])
   const [user, setUser] = useState({
-    "id":"1",
-    "name":"Alice"
+    "id":"2",
+    "name":"Bob"
   })
 
   const [myMoviesIds, setMyMoviesIds] = useState([])
