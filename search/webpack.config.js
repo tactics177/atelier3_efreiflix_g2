@@ -9,10 +9,10 @@ module.exports = {
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: "http://localhost:3003/", // Different port from other MFEs
+    publicPath: "http://localhost:3029/", // Different port from other MFEs
   },
   devServer: {
-    port: 3003, // Different port from other MFEs
+    port: 3029, // Different port from other MFEs
     static: {
       directory: path.join(__dirname, "public"),
     },
