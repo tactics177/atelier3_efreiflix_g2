@@ -1,0 +1,128 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import './styles.css';
+
+const Watchlist = ({ userId, profileId }) => {
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [moviesWithPosters, setMoviesWithPosters] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      console.log('Fetching data for user ID:', userId);
+      const userResponse = await fetch(`http://localhost:3001/users/?id=${userId}`);
+      const user = await userResponse.json();
+
+      // on cherche le profil donc userId et profileId
+      const profile = user[0].profiles.filter(profile => profile.id.toString() === profileId.toString());
+      setProfileData(profile[0]);
+
+    } catch (error) {
+      console.error('Erreur lors de la récupération des données:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [userId]);
+
+  useEffect(() => {
+    if (profileData) {
+      fetchPostersForMovies();
+    }
+  }, [profileData]);
+
+  const fetchPostersForMovies = async () => {
+    const apiKey = '15d2ea6d0dc1d476efbca3eba2b9bbfb';
+
+    // On récupère les films à partir de la BDD
+    const watchlistMovies = profileData.watchlist ?? [];
+    const favoriteMovies = profileData.favorites ?? [];
+    const allMoviesToFetch = [...watchlistMovies, ...favoriteMovies];
+
+    // on récupère les posters des films
+    const moviePromises = allMoviesToFetch.map(async (movieId) => {
+      // on récupère le film depuis la BDD
+      const filmBDD = await fetch(`http://localhost:3001/movies/?id=${movieId}`);
+      const film = await filmBDD.json();
+
+      // on recupère juste le poster du film
+      const response = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${film[0].title}`);
+      const posterPath = response.data.results[0]?.poster_path;
+
+      return {
+        id: movieId,
+        title: film[0].title,
+        posterUrl: posterPath ? `http://image.tmdb.org/t/p/w500/${posterPath}` : film[0].posterUrl, // Si le poster existe dans TMDb, on l'utilise, sinon on prend celui de la BDD
+        year: film[0].year || 'Unknown',
+        trailerUrl: film[0].trailerUrl
+      };
+    });
+
+    // on attend que tous les films soient récupérés
+    const moviesWithPosters = await Promise.all(moviePromises);
+    setMoviesWithPosters(moviesWithPosters);
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!profileData) {
+    return <div>Aucun utilisateur trouvé.</div>;
+  }
+
+  // on recup les films à afficher
+  const watchlistMovies = moviesWithPosters.filter(movie => profileData.watchlist.includes(movie.id));
+  const favoriteMovies = moviesWithPosters.filter(movie => profileData.favorites.includes(movie.id));
+
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Watchlist MFE</h1>
+
+      <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+        <h2 className="text-xl font-semibold mb-4">Films à Voir</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {watchlistMovies.length > 0 ? (
+            watchlistMovies.map((movie) => (
+              <div key={movie.id} className="movie-card p-4 border border-gray-200 rounded-lg">
+                <img src={movie.posterUrl} alt={movie.title} className="w-full h-48 object-cover rounded-lg mb-2" />
+                <h3 className="text-lg font-bold">{movie.title}</h3>
+                <p>{movie.year}</p>
+                <a href={movie.trailerUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                  Voir la bande-annonce
+                </a>
+              </div>
+            ))
+          ) : (
+            <p>Aucun film à voir pour le moment.</p>
+          )}
+        </div>
+      </div>
+
+      <div className="bg-white shadow-md rounded-lg p-6">
+        <h2 className="text-xl font-semibold mb-4">Films Aimés</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {favoriteMovies.length > 0 ? (
+            favoriteMovies.map((movie) => (
+              <div key={movie.id} className="movie-card p-4 border border-gray-200 rounded-lg">
+                <img src={movie.posterUrl} alt={movie.title} className="w-full h-48 object-cover rounded-lg mb-2" />
+                <h3 className="text-lg font-bold">{movie.title}</h3>
+                <p>{movie.year}</p>
+                <a href={movie.trailerUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                  Voir la bande-annonce
+                </a>
+              </div>
+            ))
+          ) : (
+            <p>Aucun film aimé pour le moment.</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Watchlist;
