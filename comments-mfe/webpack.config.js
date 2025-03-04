@@ -37,9 +37,9 @@ module.exports = {
   plugins: [
     new ModuleFederationPlugin({
       name: 'comments',
-      filename: 'remoteEntry.js',
+      filename: 'Comments.js',
       exposes: {
-        './CommentsComponent': './src/components/Comments',
+        './Comments': './src/Comments',
       },
       shared: {
         react: { singleton: true, requiredVersion: false },

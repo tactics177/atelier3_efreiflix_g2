@@ -1,5 +1,5 @@
 import React from 'react';
-import Comments from './components/Comments';
+import Comments from './Comments';
 import './styles/comments.css';
 
 const App = () => {
