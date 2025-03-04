@@ -47,6 +47,8 @@ const LoadingPlaceholder = ({ text }) => (
 );
 
 const App = () => {
+  const [activeSection, setActiveSection] = React.useState('home');
+
   return (
     <div style={{ 
       backgroundColor: '#141414', 
@@ -80,65 +82,105 @@ const App = () => {
             margin: 0,
             padding: 0
           }}>
-            <li style={{ cursor: 'pointer' }}>Accueil</li>
-            <li style={{ cursor: 'pointer' }}>Films</li>
-            <li style={{ cursor: 'pointer' }}>Séries</li>
-            <li style={{ cursor: 'pointer' }}>Ma Liste</li>
+            <li 
+              style={{ 
+                cursor: 'pointer',
+                fontWeight: activeSection === 'home' ? 'bold' : 'normal'
+              }}
+              onClick={() => setActiveSection('home')}
+            >
+              Accueil
+            </li>
+            <li 
+              style={{ 
+                cursor: 'pointer',
+                fontWeight: activeSection === 'films' ? 'bold' : 'normal'
+              }}
+              onClick={() => setActiveSection('films')}
+            >
+              Films
+            </li>
+            <li 
+              style={{ 
+                cursor: 'pointer',
+                fontWeight: activeSection === 'series' ? 'bold' : 'normal'
+              }}
+              onClick={() => setActiveSection('series')}
+            >
+              Séries
+            </li>
+            <li 
+              style={{ 
+                cursor: 'pointer',
+                fontWeight: activeSection === 'watchlist' ? 'bold' : 'normal'
+              }}
+              onClick={() => setActiveSection('watchlist')}
+            >
+              Ma Liste
+            </li>
           </ul>
         </nav>
       </header>
 
       <main style={{ padding: '2rem' }}>
-        {/* Hero banner section */}
-        <section style={{ 
-          marginBottom: '3rem', 
-          position: 'relative',
-          height: '400px',
-          borderRadius: '8px',
-          overflow: 'hidden',
-          backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(20,20,20,1)), url("https://assets.nflxext.com/ffe/siteui/vlv3/c31c3123-3df7-4359-8b8c-475bd2d9925d/15feb590-3d73-45e9-9e4a-2eb334c33cbb/FR-en-20231225-popsignuptwoweeks-perspective_alpha_website_large.jpg")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'flex-end',
-          padding: '2rem'
-        }}>
-          <h1 style={{ fontSize: '3rem', margin: '0 0 1rem 0' }}>Bienvenue sur EFREIFlix</h1>
-          <p style={{ fontSize: '1.2rem', maxWidth: '600px', marginBottom: '1.5rem' }}>
-            Découvrez notre sélection de films et séries. Notez vos favoris et ajoutez-les à votre liste personnalisée.
-          </p>
-        </section>
+        {/* Hero banner section - only show on home */}
+        {activeSection === 'home' && (
+          <section style={{ 
+            marginBottom: '3rem', 
+            position: 'relative',
+            height: '400px',
+            borderRadius: '8px',
+            overflow: 'hidden',
+            backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(20,20,20,1)), url("https://assets.nflxext.com/ffe/siteui/vlv3/c31c3123-3df7-4359-8b8c-475bd2d9925d/15feb590-3d73-45e9-9e4a-2eb334c33cbb/FR-en-20231225-popsignuptwoweeks-perspective_alpha_website_large.jpg")',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-end',
+            padding: '2rem'
+          }}>
+            <h1 style={{ fontSize: '3rem', margin: '0 0 1rem 0' }}>Bienvenue sur EFREIFlix</h1>
+            <p style={{ fontSize: '1.2rem', maxWidth: '600px', marginBottom: '1.5rem' }}>
+              Découvrez notre sélection de films et séries. Notez vos favoris et ajoutez-les à votre liste personnalisée.
+            </p>
+          </section>
+        )}
 
-        {/* Main content area with catalogue */}
-        <section style={{ marginBottom: '3rem' }}>
-          <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>Catalogue</h2>
-          <ErrorBoundary fallback="Erreur lors du chargement du catalogue.">
-            <Suspense fallback={<LoadingPlaceholder text="Chargement du catalogue..." />}>
-              <Catalogue />
-            </Suspense>
-          </ErrorBoundary>
-        </section>
+        {/* Main content area with catalogue - show on home or films */}
+        {(activeSection === 'home' || activeSection === 'films') && (
+          <section style={{ marginBottom: '3rem' }}>
+            <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>Catalogue</h2>
+            <ErrorBoundary fallback="Erreur lors du chargement du catalogue.">
+              <Suspense fallback={<LoadingPlaceholder text="Chargement du catalogue..." />}>
+                <Catalogue />
+              </Suspense>
+            </ErrorBoundary>
+          </section>
+        )}
 
-        {/* Watchlist section */}
-        <section style={{ marginBottom: '3rem' }}>
-          <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>Ma Liste</h2>
-          <ErrorBoundary fallback="Erreur lors du chargement de la watchlist.">
-            <Suspense fallback={<LoadingPlaceholder text="Chargement de la watchlist..." />}>
-              <Watchlist />
-            </Suspense>
-          </ErrorBoundary>
-        </section>
+        {/* Watchlist section - show on home or watchlist */}
+        {(activeSection === 'home' || activeSection === 'watchlist') && (
+          <section style={{ marginBottom: '3rem' }}>
+            <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>Ma Liste</h2>
+            <ErrorBoundary fallback="Erreur lors du chargement de la watchlist.">
+              <Suspense fallback={<LoadingPlaceholder text="Chargement de la watchlist..." />}>
+                <Watchlist />
+              </Suspense>
+            </ErrorBoundary>
+          </section>
+        )}
 
-        {/* Notation section */}
-        <section style={{ marginBottom: '3rem' }}>
-          <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>Notations</h2>
-          <ErrorBoundary fallback="Erreur lors du chargement des notations.">
-            <Suspense fallback={<LoadingPlaceholder text="Chargement des notations..." />}>
-              <Notation movieId={1} />
-            </Suspense>
-          </ErrorBoundary>
-        </section>
+        {/* Notation section - show on home */}
+        {activeSection === 'home' && (
+          <section style={{ marginBottom: '3rem' }}>
+            <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>Notations</h2>
+            <ErrorBoundary fallback="Erreur lors du chargement des notations.">
+              <Suspense fallback={<LoadingPlaceholder text="Chargement des notations..." />}>
+                <Notation movieId={1} />
+              </Suspense>
+            </ErrorBoundary>
+          </section>
+        )}
       </main>
 
       {/* Netflix-like footer */}
