@@ -2,9 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-
+const MovieCard = React.lazy(() => import("preview/productPreview"));
 const Recommendations = ({ movieId = 1, movies = [], recommendations = [] }) => {
-  const MovieCard = React.lazy(() => import("preview/productPreview"));
   const [selectedMovieId, setSelectedMovieId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const recommendedMovieIds =
