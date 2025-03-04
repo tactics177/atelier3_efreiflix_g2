@@ -41,10 +41,10 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: 'skeleton',
+      name: 'productPreview',
       filename: 'remoteEntry.js',
       exposes: {
-        './Skeleton': './src/Skeleton',
+        './productPreview': './src/productPreview',
       },
       shared: {
         react: {
