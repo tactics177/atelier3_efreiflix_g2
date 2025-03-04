@@ -94,6 +94,12 @@ const App = () => {
             >
               Ma Liste
             </li>
+            <li 
+              className={`cursor-pointer ${activeSection === 'favorites' ? 'font-bold' : 'font-normal'}`}
+              onClick={() => setActiveSection('favorites')}
+            >
+              Favoris
+            </li>
           </ul>
         </nav>
       </header>
@@ -154,6 +160,18 @@ const App = () => {
             <h2 className="text-2xl mb-6">Ma Liste</h2>
             <ErrorBoundary fallback="Erreur lors du chargement de la watchlist.">
               <Suspense fallback={<LoadingPlaceholder text="Chargement de la watchlist..." />}>
+                <Watchlist />
+              </Suspense>
+            </ErrorBoundary>
+          </section>
+        )}
+
+        {/* Favorites section - show on home or favorites */}
+        {(activeSection === 'home' || activeSection === 'favorites') && (
+          <section className="mb-12">
+            <h2 className="text-2xl mb-6">Favoris</h2>
+            <ErrorBoundary fallback="Erreur lors du chargement des favoris.">
+              <Suspense fallback={<LoadingPlaceholder text="Chargement des favoris..." />}>
                 <Watchlist />
               </Suspense>
             </ErrorBoundary>
