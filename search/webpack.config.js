@@ -9,7 +9,7 @@ module.exports = {
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: "http://localhost:3029/", // Different port from other MFEs
+    publicPath: process.env.NODE_ENV === "production" ? "/" : "http://localhost:3029/",
   },
   devServer: {
     port: 3029, // Different port from other MFEs
@@ -57,7 +57,7 @@ module.exports = {
         vue: {
           singleton: true,
           requiredVersion: dependencies.vue,
-          eager: true,
+          eager: process.env.NODE_ENV === "production",
         },
       },
     }),
