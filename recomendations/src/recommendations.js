@@ -11,6 +11,12 @@ const Recommendations = ({ movieId, movies, recommendations }) => {
     recommendedMovieIds?.includes(movie.id)
   );
 
+  const renderStars = (rating) => {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 !== 0 ? "⭐️" : "";
+    return "⭐️".repeat(fullStars) + halfStar;
+  };
+
   const movie = movies.find((m) => m.id === movieId);
 
   return (
@@ -32,14 +38,9 @@ const Recommendations = ({ movieId, movies, recommendations }) => {
             <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 flex flex-col justify-end p-4 transition-opacity duration-300">
               <h3 className="text-lg font-semibold">{movie.title}</h3>
               <p className="text-sm text-gray-400">{movie.year}</p>
-              <a 
-                href={movie.trailerUrl} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="mt-2 inline-block text-sm bg-red-600 hover:bg-red-700 px-3 py-1 rounded-md transition-all"
-              >
-                🎬 Voir la bande-annonce
-              </a>
+              <p className="text-yellow-400 text-sm font-bold">
+                {renderStars(movie.rating)} ({movie.rating})
+              </p>
             </div>
           </div>
         ))}
