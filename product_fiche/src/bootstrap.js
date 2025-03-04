@@ -1,10 +1,11 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import Skeleton from './productPreview';
+import MovieCard from './productPreview';
+import './styles.css'; // Ensure styles are imported
 
 const mount = (el) => {
   const root = createRoot(el);
-  root.render(<Skeleton />);
+  root.render(<MovieCard />);
   return root;
 };
 

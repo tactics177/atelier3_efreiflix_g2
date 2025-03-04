@@ -14,6 +14,7 @@
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { ModuleFederationPlugin } = require("webpack").container;
+const path = require("path");
 
 module.exports = {
   entry: "./src/index.js",
@@ -32,6 +33,10 @@ module.exports = {
           presets: ["@babel/preset-react"], // Configuration Babel pour React
         },
       },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
+      }
     ],
   },
   plugins: [
@@ -43,10 +48,12 @@ module.exports = {
         // header: 'header@http://localhost:3001/remoteEntry.js',
         // skeleton: 'skeleton@http://localhost:3002/remoteEntry.js',
         catalogue_G1: 'catalogue_G1@http://localhost:3003/remoteEntry.js',
+        recommendations: 'recommendations@http://localhost:3055/remoteEntry.js',
         watchlist: 'watchlist@http://localhost:3031/watchlist_chunk.js',
         notation: 'notation@http://localhost:3032/Notation.js',
         preview: 'preview@http://localhost:3033/productPreview.js',
         userprofile: 'userProfile@http://localhost:3034/userProfile.js',
+        //watchlist: 'watchlist@http://localhost:3010/remoteEntry.js'
       },
 
       shared: {
@@ -68,4 +75,7 @@ module.exports = {
       template: "./public/index.html",
     }),
   ],
+  resolve: {
+    extensions: ['.js', '.jsx']
+  },
 }; 

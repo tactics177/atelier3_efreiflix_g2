@@ -2,13 +2,24 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-const Recommendations = ({ movieId, movies, recommendations }) => {
+const Recommendations = ({ movieId = 1, movies = [], recommendations = [] }) => {
   const recommendedMovieIds =
     recommendations.find((rec) => rec.movieId === movieId)?.recommendedMovieIds || [];
   const recommendedMovies = movies.filter((movie) => recommendedMovieIds.includes(movie.id));
   const apiKey = "15d2ea6d0dc1d476efbca3eba2b9bbfb";
 
-  const MovieList = ({ movies }) => {
+  const defaultMovies = [
+    { id: 1, title: "Inception" },
+    { id: 2, title: "The Dark Knight" },
+    { id: 3, title: "Interstellar" },
+    { id: 4, title: "The Matrix" },
+    { id: 5, title: "Pulp Fiction" }
+  ];
+
+  const moviesToDisplay = recommendedMovies.length > 0 ? recommendedMovies : defaultMovies;
+  const currentMovie = movies.find((m) => m.id === movieId);
+
+  const MovieList = ({ movies, currentMovieId = movieId }) => {
     const [posterUrls, setPosterUrls] = useState({});
     const containerRef = useRef(null);
 
@@ -54,7 +65,7 @@ const Recommendations = ({ movieId, movies, recommendations }) => {
     return (
       <div className="relative bg-gradient-to-b from-gray-900 to-black text-white p-8 rounded-lg shadow-xl">
         <h2 className="text-3xl font-bold mb-6 border-l-4 border-red-600 pl-4">
-          Recommandations pour {movies.find((m) => m.id === movieId)?.title}
+          Recommandations {currentMovie ? `pour ${currentMovie.title}` : "pour vous"}
         </h2>
 
         {/* Flèche gauche */}
@@ -85,6 +96,9 @@ const Recommendations = ({ movieId, movies, recommendations }) => {
                   Image non disponible
                 </div>
               )}
+              <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 p-2 rounded-b-lg">
+                <h3 className="text-white font-semibold truncate">{movie.title}</h3>
+              </div>
             </div>
           ))}
         </div>
@@ -102,7 +116,7 @@ const Recommendations = ({ movieId, movies, recommendations }) => {
     );
   };
 
-  return <MovieList movies={recommendedMovies} />;
+  return <MovieList movies={moviesToDisplay} currentMovieId={movieId} />;
 };
 
 export default Recommendations;
