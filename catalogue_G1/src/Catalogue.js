@@ -55,6 +55,10 @@ const Catalogue = () => {
 
   return (
     <div className="rounded-lg p-6">
+      <div className="pb-6">
+        <h1 className="text-2xl font-semibold">Only on Efreiflix</h1>
+        <p>Efreiflix is the home of amazing original programming that you can’t find anywhere else. Movies, TV shows, specials and more, all tailored specifically to you.</p>
+      </div>
       {Object.entries(moviesByGenre).map(([genre, movies]) => (
         <div key={genre}>
           <h2 className="text-2xl font-semibold mb-2">{genre}</h2>
