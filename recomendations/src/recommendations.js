@@ -2,12 +2,26 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
+
 const Recommendations = ({ movieId = 1, movies = [], recommendations = [] }) => {
+  const MovieCard = React.lazy(() => import("preview/productPreview"));
+  const [selectedMovieId, setSelectedMovieId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const recommendedMovieIds =
     recommendations.find((rec) => rec.movieId === movieId)?.recommendedMovieIds || [];
   const recommendedMovies = movies.filter((movie) => recommendedMovieIds.includes(movie.id));
   const apiKey = "15d2ea6d0dc1d476efbca3eba2b9bbfb";
 
+  const openModal = (id) => {
+    setSelectedMovieId(id);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedMovieId(null);
+    setIsModalOpen(false);
+  };
+  
   const defaultMovies = [
     { id: 1, title: "Inception" },
     { id: 2, title: "The Dark Knight" },
@@ -19,7 +33,7 @@ const Recommendations = ({ movieId = 1, movies = [], recommendations = [] }) => 
   const moviesToDisplay = recommendedMovies.length > 0 ? recommendedMovies : defaultMovies;
   const currentMovie = movies.find((m) => m.id === movieId);
 
-  const MovieList = ({ movies, currentMovieId = movieId }) => {
+  const MovieList = ({ movies, currentMovieId = movieId, onMovieClick }) => {
     const [posterUrls, setPosterUrls] = useState({});
     const containerRef = useRef(null);
 
@@ -83,6 +97,7 @@ const Recommendations = ({ movieId = 1, movies = [], recommendations = [] }) => 
           {movies.map((movie) => (
             <div
               key={movie.id}
+              onClick={() => onMovieClick(movie.id)}
               className="relative min-w-[200px] max-w-[200px] cursor-pointer transform transition-all duration-300 hover:scale-110 hover:shadow-xl"
             >
               {posterUrls[movie.id] ? (
@@ -112,11 +127,34 @@ const Recommendations = ({ movieId = 1, movies = [], recommendations = [] }) => 
             <FaChevronRight size={24} />
           </button>
         )}
+        
       </div>
     );
   };
-
-  return <MovieList movies={moviesToDisplay} currentMovieId={movieId} />;
+  return  (
+    <>
+      <MovieList movies={moviesToDisplay} currentMovieId={movieId} onMovieClick={openModal} />
+      
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50"
+          onClick={closeModal}
+        >
+          <div className="relative w-full max-w-2xl mx-auto" onClick={(e) => e.stopPropagation()}>
+            <React.Suspense fallback={<div className="text-white text-center p-8">Chargement...</div>}>
+              <MovieCard id={selectedMovieId} />
+            </React.Suspense>
+            <button
+              className="absolute top-4 right-4 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full z-10"
+              onClick={closeModal}
+            >
+              X
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
 };
 
 export default Recommendations;
