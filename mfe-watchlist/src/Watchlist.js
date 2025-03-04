@@ -2,31 +2,63 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './styles.css';
 
-const Watchlist = ({ userId, profileId }) => {
+const Watchlist = () => {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [moviesWithPosters, setMoviesWithPosters] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [profileId, setProfileId] = useState(null);
 
-  const fetchData = async () => {
-    try {
-      console.log('Fetching data for user ID:', userId);
-      const userResponse = await fetch(`http://localhost:3001/users/?id=${userId}`);
-      const user = await userResponse.json();
 
-      // on cherche le profil donc userId et profileId
-      const profile = user[0].profiles.filter(profile => profile.id.toString() === profileId.toString());
-      setProfileData(profile[0]);
-
-    } catch (error) {
-      console.error('Erreur lors de la récupération des données:', error);
-    } finally {
-      setLoading(false);
+  const getUserFromLocalStorage = () => {
+    const userLocalStorage = localStorage.getItem('user');
+    if (!userLocalStorage) {
+      console.error('Aucun utilisateur trouvé.');
+      return null;
     }
+    const userData = JSON.parse(userLocalStorage);
+    return { userId: userData.id, profileId: userData.profileId };
   };
 
+
   useEffect(() => {
+    const userData = getUserFromLocalStorage();
+    if (userData) {
+      setUserId(userData.userId);
+      setProfileId(userData.profileId);
+    }
+  }, []);
+
+
+  useEffect(() => {
+    if (!userId || !profileId) return;
+    const fetchData = async () => {
+      try {
+        const userLocalStorage = localStorage.getItem('user');
+        if (!userLocalStorage) {
+          console.error('Aucun utilisateur trouvé.');
+          return;
+        }
+        const userId = JSON.parse(userLocalStorage).id;
+        const profileId = JSON.parse(userLocalStorage).profileId;
+
+        console.log('Fetching data for user ID:', userId);
+        const userResponse = await fetch(`http://localhost:3001/users/?id=${userId}`);
+        const user = await userResponse.json();
+
+        // on cherche le profil donc userId et profileId
+        const profile = user[0].profiles.filter(profile => profile.id.toString() === profileId.toString());
+        setProfileData(profile[0]);
+
+      } catch (error) {
+        console.error('Erreur lors de la récupération des données:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchData();
-  }, [userId]);
+  }, [userId, profileId]);
+
 
   useEffect(() => {
     if (profileData) {
