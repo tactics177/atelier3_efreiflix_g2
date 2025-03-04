@@ -39,11 +39,12 @@ module.exports = {
     new ModuleFederationPlugin({
       name: "shell", // Nom unique de l'application
       remotes: {
-        // Déclaration du micro-frontend Header
-        // Format: "nom_remote@url/fichier_entree.js"
-        header: 'header@http://localhost:3001/remoteEntry.js', // Configuration pour consommer le MFE 'header'
-        skeleton: 'skeleton@http://localhost:3002/remoteEntry.js',
-        catalogue_G1: 'catalogue_G1@http://localhost:3003/remoteEntry.js'
+        // We're removing the example MFEs (header and skeleton)
+        // header: 'header@http://localhost:3001/remoteEntry.js',
+        // skeleton: 'skeleton@http://localhost:3002/remoteEntry.js',
+        catalogue_G1: 'catalogue_G1@http://localhost:3003/remoteEntry.js',
+        watchlist: 'watchlist@http://localhost:3031/watchlist_chunk.js',
+        notation: 'notation@http://localhost:3032/Notation.js'
       },
 
       shared: {
