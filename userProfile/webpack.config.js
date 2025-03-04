@@ -8,10 +8,10 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: 'http://localhost:3025/',
+    publicPath: 'http://localhost:3034/', // Different port from header MFE
   },
   devServer: {
-    port: 3025,
+    port: 3034, // Different port from header MFE
     static: {
       directory: path.join(__dirname, 'public'),
     },
@@ -42,9 +42,9 @@ module.exports = {
   plugins: [
     new ModuleFederationPlugin({
       name: 'userProfile',
-      filename: 'remoteEntry.js',
+      filename: 'userProfile.js',
       exposes: {
-        './userProfile': './src/UserProfile',
+        './userProfile': './src/userProfile',
       },
       shared: {
         react: {

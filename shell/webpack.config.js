@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { ModuleFederationPlugin } = require("webpack").container;
+const path = require("path");
 
 module.exports = {
   entry: "./src/index.js",
@@ -18,6 +19,10 @@ module.exports = {
           presets: ["@babel/preset-react"],
         },
       },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
+      }
     ],
   },
   plugins: [
@@ -33,6 +38,8 @@ module.exports = {
         notation: 'notation@http://localhost:3032/Notation.js',
         preview: 'preview@http://localhost:3033/productPreview.js',
         comments: 'comments@http://localhost:3025/Comments.js'
+        userprofile: 'userProfile@http://localhost:3034/userProfile.js',
+        //watchlist: 'watchlist@http://localhost:3010/remoteEntry.js'
       },
 
       shared: {
@@ -53,4 +60,7 @@ module.exports = {
       template: "./public/index.html",
     }),
   ],
+  resolve: {
+    extensions: ['.js', '.jsx']
+  },
 }; 

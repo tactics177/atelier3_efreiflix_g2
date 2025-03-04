@@ -10,7 +10,6 @@ const MovieCard = ({ id = 1 }) => {
     const fetchMovies = async () => {
       try {
         const response = await axios.get(`http://localhost:3001/movies/?id=${id}`);
-debugger;
         const apiKey = '15d2ea6d0dc1d476efbca3eba2b9bbfb';
         const movieData = response.data[0];
 
@@ -28,7 +27,7 @@ debugger;
     fetchMovies();
   }, [id]);
 
-  if (!movie) return <div>Chargement...</div>;
+  if (!movie) return <div className="p-4 text-white text-center">Chargement...</div>;
 
   return (
     <div className="relative w-full max-w-2xl max-h-[80vh] bg-black text-white rounded-lg overflow-hidden shadow-2xl">
