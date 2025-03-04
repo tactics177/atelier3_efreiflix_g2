@@ -46,6 +46,9 @@ module.exports = {
       exposes: {
         './recommendations': './src/recommendations',
       },
+      remotes: {
+        preview: 'preview@http://localhost:3033/productPreview.js',
+      },
       shared: {
         react: {
           singleton: true,

@@ -11,7 +11,6 @@ export const ProductsList = ({ products }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleProductClick = (id) => {
-    console.log(id);
     setSelectedProduct(id);
     setIsModalOpen(true);
   };
