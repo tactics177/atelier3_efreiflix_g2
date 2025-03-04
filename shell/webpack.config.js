@@ -1,17 +1,3 @@
-/**
- * Configuration Webpack pour l'application Shell (Host Application)
- * 
- * Ce fichier configure l'application principale qui va héberger et orchestrer
- * les différents micro-frontends. En tant qu'application hôte, elle est responsable
- * de l'importation et de l'intégration des composants distants.
- * 
- * Points clés :
- * - Configuration du port de développement (3000)
- * - Déclaration des micro-frontends distants (remotes)
- * - Configuration du partage des dépendances
- * - Configuration de Babel pour la transpilation React
- */
-
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { ModuleFederationPlugin } = require("webpack").container;
 const path = require("path");
@@ -20,8 +6,8 @@ module.exports = {
   entry: "./src/index.js",
   mode: "development",
   devServer: {
-    port: 3000, // Port distinct du micro-frontend Header (3001)
-    hot: true,  // Activation du Hot Module Replacement
+    port: 3000,
+    hot: true,
   },
   module: {
     rules: [
@@ -30,7 +16,7 @@ module.exports = {
         loader: "babel-loader",
         exclude: /node_modules/,
         options: {
-          presets: ["@babel/preset-react"], // Configuration Babel pour React
+          presets: ["@babel/preset-react"],
         },
       },
       {
@@ -40,9 +26,8 @@ module.exports = {
     ],
   },
   plugins: [
-    // Configuration Module Federation pour l'application hôte
     new ModuleFederationPlugin({
-      name: "shell", // Nom unique de l'application
+      name: "shell",
       remotes: {
         // We're removing the example MFEs (header and skeleton)
         // header: 'header@http://localhost:3001/remoteEntry.js',
@@ -52,18 +37,18 @@ module.exports = {
         watchlist: 'watchlist@http://localhost:3031/watchlist_chunk.js',
         notation: 'notation@http://localhost:3032/Notation.js',
         preview: 'preview@http://localhost:3033/productPreview.js',
+        comments: 'comments@http://localhost:3025/Comments.js'
         userprofile: 'userProfile@http://localhost:3034/userProfile.js',
         favoris: 'favoris@http://localhost:3010/remoteEntry.js'
       },
 
       shared: {
-        // Configuration du partage des dépendances
-        react: { 
-          singleton: true,     // Une seule instance de React
-          requiredVersion: false, // Pas de vérification stricte des versions
-          eager: true         // Chargement immédiat pour l'app host
+        react: {
+          singleton: true,
+          requiredVersion: false,
+          eager: true
         },
-        "react-dom": { 
+        "react-dom": {
           singleton: true,
           requiredVersion: false,
           eager: true
