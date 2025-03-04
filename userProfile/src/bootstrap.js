@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import UserProfile from './UserProfile';
+import UserProfile from './userProfile';
 
 const mount = (el) => {
   const root = createRoot(el);
