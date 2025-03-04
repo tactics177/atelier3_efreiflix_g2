@@ -11,7 +11,7 @@ module.exports = {
     publicPath: 'http://localhost:3033/', // Different port from header MFE
   },
   devServer: {
-    port: 3002, // Different port from header MFE
+    port: 3033, // Different port from header MFE
     static: {
       directory: path.join(__dirname, 'public'),
     },
@@ -41,7 +41,7 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: 'productPreview',
+      name: 'preview',
       filename: 'productPreview.js',
       exposes: {
         './productPreview': './src/productPreview',
