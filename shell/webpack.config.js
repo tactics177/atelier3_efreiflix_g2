@@ -14,6 +14,7 @@
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { ModuleFederationPlugin } = require("webpack").container;
+const path = require("path");
 
 module.exports = {
   entry: "./src/index.js",
@@ -32,6 +33,10 @@ module.exports = {
           presets: ["@babel/preset-react"], // Configuration Babel pour React
         },
       },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
+      }
     ],
   },
   plugins: [
@@ -68,4 +73,7 @@ module.exports = {
       template: "./public/index.html",
     }),
   ],
+  resolve: {
+    extensions: ['.js', '.jsx']
+  },
 }; 
