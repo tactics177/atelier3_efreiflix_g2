@@ -23,7 +23,7 @@ const Watchlist = () => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5001/users?userId=${user.id}&name=${user.name}`
+          `http://localhost:3001/users?userId=${user.id}&name=${user.name}`
         );
         console.log("Response for user", response.data);
 
@@ -51,7 +51,7 @@ const Watchlist = () => {
         const movieData = await Promise.all(
           myMoviesIds.map(async (movieId) => {
             const response = await axios.get(
-              `http://localhost:5001/movies?id=${movieId}`
+              `http://localhost:3001/movies?id=${movieId}`
             );
             return response.data[0]?.title;
           })

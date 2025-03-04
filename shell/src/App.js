@@ -10,6 +10,7 @@ const Watchlist = React.lazy(() => import('watchlist/Watchlist'));
 const Notation = React.lazy(() => import('notation/Notation'));
 const Preview = React.lazy(() => import('preview/productPreview'));
 const UserProfile = React.lazy(() => import('userprofile/userProfile')); 
+const Favoris = React.lazy(() => import('favoris/Watchlist'));
 
 // Error boundary component for handling loading errors
 class ErrorBoundary extends React.Component {
@@ -182,7 +183,7 @@ const App = () => {
             <h2 className="text-2xl mb-6">Favoris</h2>
             <ErrorBoundary fallback="Erreur lors du chargement des favoris.">
               <Suspense fallback={<LoadingPlaceholder text="Chargement des favoris..." />}>
-                <Watchlist />
+                <Favoris />
               </Suspense>
             </ErrorBoundary>
           </section>
