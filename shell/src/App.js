@@ -15,21 +15,26 @@ const lazyLoad = (importFn, fallback) => {
   }
 };
 
+// Check if we're in production environment
+const isProduction = process.env.NODE_ENV === 'production';
+
 // Use the lazyLoad function for all MFE imports
 const Catalogue = lazyLoad(() => import('catalogue_G1/Catalogue'), 
   <div className="p-4 bg-red-900 rounded">Le catalogue n'a pas pu être chargé.</div>);
-const Recommendations = lazyLoad(() => import('recommendations/recommendations'),
-  <div className="p-4 bg-red-900 rounded">Les recommandations n'ont pas pu être chargées.</div>);
-const Watchlist = lazyLoad(() => import('watchlist/Watchlist'),
-  <div className="p-4 bg-red-900 rounded">La liste de visionnage n'a pas pu être chargée.</div>);
-const Notation = lazyLoad(() => import('notation/Notation'),
-  <div className="p-4 bg-red-900 rounded">Le système de notation n'a pas pu être chargé.</div>);
-const Preview = lazyLoad(() => import('preview/productPreview'),
-  <div className="p-4 bg-red-900 rounded">L'aperçu du produit n'a pas pu être chargé.</div>);
-const UserProfile = lazyLoad(() => import('userprofile/userProfile'),
-  <div className="p-4 bg-red-900 rounded">Le profil utilisateur n'a pas pu être chargé.</div>);
-const Favoris = lazyLoad(() => import('favoris/Watchlist'),
-  <div className="p-4 bg-red-900 rounded">Les favoris n'ont pas pu être chargés.</div>);
+
+// Only load other MFEs in development environment
+const Recommendations = !isProduction ? lazyLoad(() => import('recommendations/recommendations'),
+  <div className="p-4 bg-red-900 rounded">Les recommandations n'ont pas pu être chargées.</div>) : null;
+const Watchlist = !isProduction ? lazyLoad(() => import('watchlist/Watchlist'),
+  <div className="p-4 bg-red-900 rounded">La liste de visionnage n'a pas pu être chargée.</div>) : null;
+const Notation = !isProduction ? lazyLoad(() => import('notation/Notation'),
+  <div className="p-4 bg-red-900 rounded">Le système de notation n'a pas pu être chargé.</div>) : null;
+const Preview = !isProduction ? lazyLoad(() => import('preview/productPreview'),
+  <div className="p-4 bg-red-900 rounded">L'aperçu du produit n'a pas pu être chargé.</div>) : null;
+const UserProfile = !isProduction ? lazyLoad(() => import('userprofile/userProfile'),
+  <div className="p-4 bg-red-900 rounded">Le profil utilisateur n'a pas pu être chargé.</div>) : null;
+const Favoris = !isProduction ? lazyLoad(() => import('favoris/Watchlist'),
+  <div className="p-4 bg-red-900 rounded">Les favoris n'ont pas pu être chargés.</div>) : null;
 
 // Error boundary component for handling loading errors
 class ErrorBoundary extends React.Component {
@@ -114,39 +119,43 @@ const App = () => {
             >
               Films
             </li>
-            <li 
-              className={`cursor-pointer ${activeSection === 'series' ? 'font-bold' : 'font-normal'}`}
-              onClick={() => setActiveSection('series')}
-            >
-              Séries
-            </li>
-            <li 
-              className={`cursor-pointer ${activeSection === 'recommendations' ? 'font-bold' : 'font-normal'}`}
-              onClick={() => setActiveSection('recommendations')}
-            >
-              Recommandations
-            </li>
-            <li 
-              className={`cursor-pointer ${activeSection === 'watchlist' ? 'font-bold' : 'font-normal'}`}
-              onClick={() => setActiveSection('watchlist')}
-            >
-              Ma Liste
-            </li>
-            <li 
-              className={`cursor-pointer ${activeSection === 'favorites' ? 'font-bold' : 'font-normal'}`}
-              onClick={() => setActiveSection('favorites')}
-            >
-              Favoris
-            </li>
-            <li 
-              className="cursor-pointer"
-              style={{ 
-                fontWeight: activeSection === 'userProfile' ? 'bold' : 'normal'
-              }}
-              onClick={() => setActiveSection('userProfile')}
-            >
-              Mon Profile
-            </li>
+            {!isProduction && (
+              <>
+                <li 
+                  className={`cursor-pointer ${activeSection === 'series' ? 'font-bold' : 'font-normal'}`}
+                  onClick={() => setActiveSection('series')}
+                >
+                  Séries
+                </li>
+                <li 
+                  className={`cursor-pointer ${activeSection === 'recommendations' ? 'font-bold' : 'font-normal'}`}
+                  onClick={() => setActiveSection('recommendations')}
+                >
+                  Recommandations
+                </li>
+                <li 
+                  className={`cursor-pointer ${activeSection === 'watchlist' ? 'font-bold' : 'font-normal'}`}
+                  onClick={() => setActiveSection('watchlist')}
+                >
+                  Ma Liste
+                </li>
+                <li 
+                  className={`cursor-pointer ${activeSection === 'favorites' ? 'font-bold' : 'font-normal'}`}
+                  onClick={() => setActiveSection('favorites')}
+                >
+                  Favoris
+                </li>
+                <li 
+                  className="cursor-pointer"
+                  style={{ 
+                    fontWeight: activeSection === 'userProfile' ? 'bold' : 'normal'
+                  }}
+                  onClick={() => setActiveSection('userProfile')}
+                >
+                  Mon Profile
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </header>
@@ -157,7 +166,7 @@ const App = () => {
           <section className="mb-12 relative h-[400px] rounded-lg overflow-hidden bg-gradient-to-b from-black/10 to-[#141414] bg-[url('https://assets.nflxext.com/ffe/siteui/vlv3/c31c3123-3df7-4359-8b8c-475bd2d9925d/15feb590-3d73-45e9-9e4a-2eb334c33cbb/FR-en-20231225-popsignuptwoweeks-perspective_alpha_website_large.jpg')] bg-cover bg-center flex flex-col justify-end p-8">
             <h1 className="text-5xl m-0 mb-4">Bienvenue sur EFREIFlix</h1>
             <p className="text-xl max-w-[600px] mb-6">
-              Découvrez notre sélection de films et séries. Notez vos favoris et ajoutez-les à votre liste personnalisée.
+              Découvrez notre sélection de films et séries. {!isProduction && "Notez vos favoris et ajoutez-les à votre liste personnalisée."}
             </p>
           </section>
         )}
@@ -174,79 +183,84 @@ const App = () => {
           </section>
         )}
 
-        {/* Recommendations section - show on home or recommendations */}
-        {(activeSection === 'home' || activeSection === 'recommendations') && (
-          <section className="mb-12">
-            <h2 className="text-2xl mb-6">Recommandations</h2>
-            <ErrorBoundary fallback="Erreur lors du chargement des recommandations.">
-              <Suspense fallback={<LoadingPlaceholder text="Chargement des recommandations..." />}>
-                <Recommendations 
-                  movieId={1}
-                  movies={[
-                    { id: 1, title: "Inception" },
-                    { id: 2, title: "The Dark Knight" },
-                    { id: 3, title: "Interstellar" },
-                    { id: 4, title: "The Matrix" },
-                    { id: 5, title: "Pulp Fiction" }
-                  ]}
-                  recommendations={[
-                    { 
-                      movieId: 1, 
-                      recommendedMovieIds: [2, 3, 4, 5] 
-                    }
-                  ]}
-                />
-              </Suspense>
-            </ErrorBoundary>
-          </section>
-        )}
+        {/* Only render other MFEs in development environment */}
+        {!isProduction && (
+          <>
+            {/* Recommendations section - show on home or recommendations */}
+            {(activeSection === 'home' || activeSection === 'recommendations') && (
+              <section className="mb-12">
+                <h2 className="text-2xl mb-6">Recommandations</h2>
+                <ErrorBoundary fallback="Erreur lors du chargement des recommandations.">
+                  <Suspense fallback={<LoadingPlaceholder text="Chargement des recommandations..." />}>
+                    <Recommendations 
+                      movieId={1}
+                      movies={[
+                        { id: 1, title: "Inception" },
+                        { id: 2, title: "The Dark Knight" },
+                        { id: 3, title: "Interstellar" },
+                        { id: 4, title: "The Matrix" },
+                        { id: 5, title: "Pulp Fiction" }
+                      ]}
+                      recommendations={[
+                        { 
+                          movieId: 1, 
+                          recommendedMovieIds: [2, 3, 4, 5] 
+                        }
+                      ]}
+                    />
+                  </Suspense>
+                </ErrorBoundary>
+              </section>
+            )}
 
-        {/* Watchlist section - show on home or watchlist */}
-        {(activeSection === 'home' || activeSection === 'watchlist') && (
-          <section className="mb-12">
-            <h2 className="text-2xl mb-6">Ma Liste</h2>
-            <ErrorBoundary fallback="Erreur lors du chargement de la watchlist.">
-              <Suspense fallback={<LoadingPlaceholder text="Chargement de la watchlist..." />}>
-                <Watchlist />
-              </Suspense>
-            </ErrorBoundary>
-          </section>
-        )}
+            {/* Watchlist section - show on home or watchlist */}
+            {(activeSection === 'home' || activeSection === 'watchlist') && (
+              <section className="mb-12">
+                <h2 className="text-2xl mb-6">Ma Liste</h2>
+                <ErrorBoundary fallback="Erreur lors du chargement de la watchlist.">
+                  <Suspense fallback={<LoadingPlaceholder text="Chargement de la watchlist..." />}>
+                    <Watchlist />
+                  </Suspense>
+                </ErrorBoundary>
+              </section>
+            )}
 
-        {/* Favorites section - show on home or favorites */}
-        {(activeSection === 'home' || activeSection === 'favorites') && (
-          <section className="mb-12">
-            <h2 className="text-2xl mb-6">Favoris</h2>
-            <ErrorBoundary fallback="Erreur lors du chargement des favoris.">
-              <Suspense fallback={<LoadingPlaceholder text="Chargement des favoris..." />}>
-                <Favoris />
-              </Suspense>
-            </ErrorBoundary>
-          </section>
-        )}
+            {/* Favorites section - show on home or favorites */}
+            {(activeSection === 'home' || activeSection === 'favorites') && (
+              <section className="mb-12">
+                <h2 className="text-2xl mb-6">Favoris</h2>
+                <ErrorBoundary fallback="Erreur lors du chargement des favoris.">
+                  <Suspense fallback={<LoadingPlaceholder text="Chargement des favoris..." />}>
+                    <Favoris />
+                  </Suspense>
+                </ErrorBoundary>
+              </section>
+            )}
 
-        {/* Notation section - show on home */}
-        {activeSection === 'home' && (
-          <section className="mb-12">
-            <h2 className="text-2xl mb-6">Notations</h2>
-            <ErrorBoundary fallback="Erreur lors du chargement des notations.">
-              <Suspense fallback={<LoadingPlaceholder text="Chargement des notations..." />}>
-                <Notation movieId={1} />
-              </Suspense>
-            </ErrorBoundary>
-          </section>
-        )}
+            {/* Notation section - show on home */}
+            {activeSection === 'home' && (
+              <section className="mb-12">
+                <h2 className="text-2xl mb-6">Notations</h2>
+                <ErrorBoundary fallback="Erreur lors du chargement des notations.">
+                  <Suspense fallback={<LoadingPlaceholder text="Chargement des notations..." />}>
+                    <Notation movieId={1} />
+                  </Suspense>
+                </ErrorBoundary>
+              </section>
+            )}
 
-        {/* UserProfile section - show on home */}
-        {activeSection == 'userProfile' && (
-          <section style={{ marginBottom: '3rem' }}>
-            <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>Profile Utilisateur</h2>
-            <ErrorBoundary fallback="Erreur lors du chargement du profile.">
-              <Suspense fallback={<LoadingPlaceholder text="Chargement du profile..." />}>
-                <UserProfile/>
-              </Suspense>
-            </ErrorBoundary>
-          </section>
+            {/* UserProfile section - show on home */}
+            {activeSection == 'userProfile' && (
+              <section style={{ marginBottom: '3rem' }}>
+                <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>Profile Utilisateur</h2>
+                <ErrorBoundary fallback="Erreur lors du chargement du profile.">
+                  <Suspense fallback={<LoadingPlaceholder text="Chargement du profile..." />}>
+                    <UserProfile/>
+                  </Suspense>
+                </ErrorBoundary>
+              </section>
+            )}
+          </>
         )}
       </main>
 

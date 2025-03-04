@@ -9,7 +9,9 @@ module.exports = {
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: process.env.NODE_ENV === "production" ? "/" : "http://localhost:3029/",
+    publicPath: process.env.NODE_ENV === 'production' 
+      ? 'https://mfe-g2-search.vercel.app/' 
+      : 'http://localhost:3029/',
   },
   devServer: {
     port: 3029, // Different port from other MFEs
