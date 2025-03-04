@@ -9,6 +9,7 @@ const Recommendations = React.lazy(() => import('recommendations/recommendations
 const Watchlist = React.lazy(() => import('watchlist/Watchlist'));
 const Notation = React.lazy(() => import('notation/Notation'));
 const Preview = React.lazy(() => import('preview/productPreview'));
+const UserProfile = React.lazy(() => import('userprofile/userProfile')); 
 
 // Error boundary component for handling loading errors
 class ErrorBoundary extends React.Component {
@@ -94,6 +95,15 @@ const App = () => {
             >
               Ma Liste
             </li>
+            <li 
+              style={{ 
+                cursor: 'pointer',
+                fontWeight: activeSection === 'userProfile' ? 'bold' : 'normal'
+              }}
+              onClick={() => setActiveSection('userProfile')}
+            >
+              Mon Profile
+            </li>
           </ul>
         </nav>
       </header>
@@ -167,6 +177,18 @@ const App = () => {
             <ErrorBoundary fallback="Erreur lors du chargement des notations.">
               <Suspense fallback={<LoadingPlaceholder text="Chargement des notations..." />}>
                 <Notation movieId={1} />
+              </Suspense>
+            </ErrorBoundary>
+          </section>
+        )}
+
+        {/* UserProfile section - show on home */}
+        {activeSection == 'userProfile' && (
+          <section style={{ marginBottom: '3rem' }}>
+            <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>Profile Utilisateur</h2>
+            <ErrorBoundary fallback="Erreur lors du chargement du profile.">
+              <Suspense fallback={<LoadingPlaceholder text="Chargement du profile..." />}>
+                <UserProfile/>
               </Suspense>
             </ErrorBoundary>
           </section>
