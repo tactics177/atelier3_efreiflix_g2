@@ -43,6 +43,7 @@ module.exports = {
         // header: 'header@http://localhost:3001/remoteEntry.js',
         // skeleton: 'skeleton@http://localhost:3002/remoteEntry.js',
         catalogue_G1: 'catalogue_G1@http://localhost:3003/remoteEntry.js',
+        recommendations: 'recommendations@http://localhost:3055/remoteEntry.js',
         watchlist: 'watchlist@http://localhost:3031/watchlist_chunk.js',
         notation: 'notation@http://localhost:3032/Notation.js',
         preview: 'preview@http://localhost:3033/productPreview.js',

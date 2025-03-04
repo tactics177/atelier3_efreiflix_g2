@@ -5,6 +5,7 @@ import React, { Suspense } from 'react';
 // We'll use the real MFEs instead of the skeleton
 // const Skeleton = React.lazy(() => import('skeleton/Skeleton'));
 const Catalogue = React.lazy(() => import('catalogue_G1/Catalogue'));
+const Recommendations = React.lazy(() => import('recommendations/recommendations'));
 const Watchlist = React.lazy(() => import('watchlist/Watchlist'));
 const Notation = React.lazy(() => import('notation/Notation'));
 const Preview = React.lazy(() => import('preview/productPreview'));
@@ -113,6 +114,15 @@ const App = () => {
             <li 
               style={{ 
                 cursor: 'pointer',
+                fontWeight: activeSection === 'recommendations' ? 'bold' : 'normal'
+              }}
+              onClick={() => setActiveSection('recommendations')}
+            >
+              Recommandations
+            </li>
+            <li 
+              style={{ 
+                cursor: 'pointer',
                 fontWeight: activeSection === 'watchlist' ? 'bold' : 'normal'
               }}
               onClick={() => setActiveSection('watchlist')}
@@ -154,6 +164,18 @@ const App = () => {
             <ErrorBoundary fallback="Erreur lors du chargement du catalogue.">
               <Suspense fallback={<LoadingPlaceholder text="Chargement du catalogue..." />}>
                 <Catalogue />
+              </Suspense>
+            </ErrorBoundary>
+          </section>
+        )}
+
+        {/* Recommendations section - show on home or recommendations */}
+        {(activeSection === 'home' || activeSection === 'recommendations') && (
+          <section style={{ marginBottom: '3rem' }}>
+            <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>Recommandations</h2>
+            <ErrorBoundary fallback="Erreur lors du chargement des recommandations.">
+              <Suspense fallback={<LoadingPlaceholder text="Chargement des recommandations..." />}>
+                <Recommendations />
               </Suspense>
             </ErrorBoundary>
           </section>
