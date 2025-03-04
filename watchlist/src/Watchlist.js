@@ -6,16 +6,74 @@ import axios from 'axios';
 const Watchlist = () => {
 
   const [myfavorites, setMyFavorites] = useState([])
+  const [user, setUser] = useState({
+    "id":"1",
+    "name":"Alice"
+  })
+
+  const [myMoviesIds, setMyMoviesIds] = useState([])
+
+  const [myMoviesTitles, setMyMoviesTitles] = useState([]);
+  //const myMovies = ["The Matrix", "Inception", "Interstellar"]
 
   const apiKey = '15d2ea6d0dc1d476efbca3eba2b9bbfb';
-
-  const myMovies = ["The Matrix", "Inception", "Interstellar"]
   
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5001/users?userId=${user.id}&name=${user.name}`
+        );
+        console.log("Response for user", response.data);
+
+        if (response.data && response.data.length > 0) {
+          const watchlist = response.data[0].profiles[0].watchlist;
+          console.log("Watchlist IDs:", watchlist);
+          setMyMoviesIds(watchlist); 
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchUser();
+  }, [user]); // Only runs when userId changes
+
+  console.log("My movies ids")
+  console.log(myMoviesIds)
+
+
+  useEffect(() => {
+    if (myMoviesIds.length === 0) return;
+
+    const fetchMovieTitles = async () => {
+      try {
+        const movieData = await Promise.all(
+          myMoviesIds.map(async (movieId) => {
+            const response = await axios.get(
+              `http://localhost:5001/movies?id=${movieId}`
+            );
+            return response.data[0]?.title;
+          })
+        );
+        console.log("Fetched Movie Titles:", movieData);
+        setMyMoviesTitles(movieData);
+      } catch (error) {
+        console.error("Error fetching movie titles:", error);
+      }
+    };
+    fetchMovieTitles();
+  }, [myMoviesIds]);
+
+  console.log("My movies titles")
+  console.log(myMoviesTitles)
+
+
   useEffect(() => {
     const fetchMovies = async () => {
       try {
         const movieData = await Promise.all(
-          myMovies.map(async (title) => {
+          myMoviesTitles.map(async (title) => {
             const response = await axios.get(
               `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${title}`
             );
@@ -31,8 +89,8 @@ const Watchlist = () => {
         console.error("Error fetching movies:", error);
       }
     };
-    fetchMovies();
-  }, []);
+    fetchMovies(); // Runs after user data is loaded
+  }, [myMoviesTitles]);
 
 
   return (
